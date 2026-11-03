@@ -1,0 +1,5 @@
+# Unified diffs use one space for an empty context line.
+*.patch whitespace=-blank-at-eol
+
+# Preserve upstream license text verbatim, including its final blank lines.
+assets/torrent-licenses/*.txt whitespace=-blank-at-eof

@@ -1,0 +1,153 @@
+--- a/src/command.cpp
++++ b/src/command.cpp
+@@ -1600,17 +1600,18 @@
+ #if __ANDROID_API__ >= 26
+ void VkCompute::record_import_android_hardware_buffer(const ImportAndroidHardwareBufferPipeline* pipeline, const VkImageMat& src, const VkMat& dst)
+ {
+-    // image layout transform undefined @ null to general @ compute
++    barrier_readwrite(dst);
++    // Preserve decoder pixels and acquire ownership from Android. Acquire fence is waited by caller.
+     {
+         VkImageMemoryBarrier* barriers = new VkImageMemoryBarrier[1];
+         barriers[0].sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+         barriers[0].pNext = 0;
+         barriers[0].srcAccessMask = 0;
+         barriers[0].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+-        barriers[0].oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
++        barriers[0].oldLayout = VK_IMAGE_LAYOUT_GENERAL;
+         barriers[0].newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+-        barriers[0].srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+-        barriers[0].dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
++        barriers[0].srcQueueFamilyIndex = (~2u) /* VK_QUEUE_FAMILY_FOREIGN_EXT, absent in ncnn simplevk.h */;
++        barriers[0].dstQueueFamilyIndex = vkdev->info.compute_queue_family_index();
+         barriers[0].image = src.image();
+         barriers[0].subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+         barriers[0].subresourceRange.baseMipLevel = 0;
+@@ -1817,7 +1818,40 @@
+             d->delayed_records.push_back(r);
+         }
+     }
+-}
++
++    // Return the imported buffer before Image.close() lets MediaCodec reuse it.
++    {
++        VkImageMemoryBarrier* barriers = new VkImageMemoryBarrier[1]();
++        barriers[0].sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
++        barriers[0].srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
++        barriers[0].oldLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
++        barriers[0].newLayout = VK_IMAGE_LAYOUT_GENERAL;
++        barriers[0].srcQueueFamilyIndex = vkdev->info.compute_queue_family_index();
++        barriers[0].dstQueueFamilyIndex = (~2u) /* VK_QUEUE_FAMILY_FOREIGN_EXT, absent in ncnn simplevk.h */;
++        barriers[0].image = src.image();
++        barriers[0].subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
++        barriers[0].subresourceRange.levelCount = 1;
++        barriers[0].subresourceRange.layerCount = 1;
++        if (vkdev->info.support_VK_KHR_push_descriptor())
++        {
++            vkCmdPipelineBarrier(d->compute_command_buffer, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
++                                 VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, 0, 0, 0, 1, barriers);
++            delete[] barriers;
++        }
++        else
++        {
++            VkComputePrivate::record r;
++            r.type = VkComputePrivate::record::TYPE_image_barrers;
++            r.command_buffer = d->compute_command_buffer;
++            r.image_barrers.src_stage = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
++            r.image_barrers.dst_stage = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
++            r.image_barrers.barrier_count = 1;
++            r.image_barrers.barriers = barriers;
++            d->delayed_records.push_back(r);
++        }
++    }
++}
++
+ #endif // __ANDROID_API__ >= 26
+ #endif // NCNN_PLATFORM_API
+ 
+--- a/src/gpu.cpp
++++ b/src/gpu.cpp
+@@ -633,8 +633,9 @@
+     compute_queue_family_index = find_device_compute_queue(queueFamilyProperties);
+     transfer_queue_family_index = find_device_transfer_queue(queueFamilyProperties);
+ 
+-    compute_queue_count = queueFamilyProperties[compute_queue_family_index].queueCount;
+-    transfer_queue_count = queueFamilyProperties[transfer_queue_family_index].queueCount;
++    // Thor serializes sessions and keeps inference/presentation on one queue.
++    compute_queue_count = 1;
++    transfer_queue_count = 1;
+ 
+     unified_compute_transfer_queue = compute_queue_family_index == transfer_queue_family_index;
+ }
+--- a/src/pipeline.cpp
++++ b/src/pipeline.cpp
+@@ -498,7 +498,7 @@
+     samplerCreateInfo.minLod = 0.0f;
+     samplerCreateInfo.maxLod = 0.0f;
+     samplerCreateInfo.borderColor = VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK; //VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE; FIXME
+-    samplerCreateInfo.unnormalizedCoordinates = VK_TRUE;                     //VK_FALSE; FIXME ?
++    samplerCreateInfo.unnormalizedCoordinates = VK_FALSE; // YCbCr conversion requires normalized coordinates.
+ 
+     ret = vkCreateSampler(vkdev->vkdevice(), &samplerCreateInfo, 0, &sampler);
+     if (ret != VK_SUCCESS)
+--- a/src/convert_ycbcr.comp
++++ b/src/convert_ycbcr.comp
+@@ -12,7 +12,7 @@
+ layout (constant_id = 6) const int need_resize = 0;
+ 
+ layout (binding = 0) uniform sampler2D android_hardware_buffer_image;
+-layout (binding = 1) writeonly buffer vkmat_blob { sfp vkmat_blob_data[]; };
++layout (binding = 1) writeonly buffer vkmat_blob { uint vkmat_blob_data[]; };
+ layout (binding = 2) writeonly buffer vkmat_pack4_blob { sfpvec4 vkmat_pack4_blob_data[]; };
+ 
+ void main()
+@@ -80,26 +80,32 @@
+         }
+     }
+ 
+-    vec3 rgb = texture(android_hardware_buffer_image, pos).rgb * 255.f;
++    vec3 rgb = texture(android_hardware_buffer_image, (pos + vec2(0.5)) / vec2(w, h)).rgb * 255.f;
+ 
+-    const int outcstep = outw * outh / 4 * 4;
++    const int outcstep = (outw * outh + 3) / 4 * 4;
++
++    // Thor uses packed RGBA8 for full-size frames; FP32 legacy planes store their bit representation.
++    if (type_to == 6)
++    {
++        vkmat_blob_data[gy * outw + gx] = packUnorm4x8(vec4(rgb / 255.f, 1.f));
++    }
+ 
+     if (type_to == 1) // PIXEL_RGB
+     {
+         ivec3 v_offset = (gy * outw + gx) + ivec3(0, 1, 2) * outcstep;
+ 
+-        buffer_st1(vkmat_blob_data, v_offset.r, afp(rgb.r));
+-        buffer_st1(vkmat_blob_data, v_offset.g, afp(rgb.g));
+-        buffer_st1(vkmat_blob_data, v_offset.b, afp(rgb.b));
++        buffer_st1(vkmat_blob_data, v_offset.r, floatBitsToUint(rgb.r));
++        buffer_st1(vkmat_blob_data, v_offset.g, floatBitsToUint(rgb.g));
++        buffer_st1(vkmat_blob_data, v_offset.b, floatBitsToUint(rgb.b));
+     }
+ 
+     if (type_to == 2) // PIXEL_BGR
+     {
+         ivec3 v_offset = (gy * outw + gx) + ivec3(0, 1, 2) * outcstep;
+ 
+-        buffer_st1(vkmat_blob_data, v_offset.r, afp(rgb.b));
+-        buffer_st1(vkmat_blob_data, v_offset.g, afp(rgb.g));
+-        buffer_st1(vkmat_blob_data, v_offset.b, afp(rgb.r));
++        buffer_st1(vkmat_blob_data, v_offset.r, floatBitsToUint(rgb.b));
++        buffer_st1(vkmat_blob_data, v_offset.g, floatBitsToUint(rgb.g));
++        buffer_st1(vkmat_blob_data, v_offset.b, floatBitsToUint(rgb.r));
+     }
+ 
+     if (type_to == 3) // PIXEL_GRAY
+@@ -109,7 +115,7 @@
+ 
+         int v_offset = gy * outw + gx;
+ 
+-        buffer_st1(vkmat_blob_data, v_offset, afp(v));
++        buffer_st1(vkmat_blob_data, v_offset, floatBitsToUint(v));
+     }
+ 
+     if (type_to == 4) // PIXEL_RGBA

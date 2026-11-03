@@ -1,0 +1,64 @@
+#version 450
+// Stage 3 only: reconstruct stage 2 flow once, retain it for final compose,
+// and prepare the last network input directly from the same FP32 values.
+#extension GL_EXT_shader_16bit_storage: require
+layout(binding=0) readonly buffer A { float16_t a[]; };
+layout(binding=1) readonly buffer B { float16_t b[]; };
+layout(binding=2) readonly buffer EA { float16_t ea[]; };
+layout(binding=3) readonly buffer EB { float16_t eb[]; };
+layout(binding=4) readonly buffer Previous { float previous[]; };
+layout(binding=6) readonly buffer Coarse { float16_t coarse[]; };
+layout(binding=7) writeonly buffer Flow { float flow[]; };
+layout(binding=5) writeonly buffer X { float16_t result[]; };
+layout(push_constant) uniform parameter { int w; int h; int scale; int stage; int nhwc; } p;
+float coarsePixel(int c,ivec2 q) {
+ int w=p.w/2/2,h=p.h/2/2;
+ int channel=c*4+(q.y%2)*2+q.x%2;
+ return coarse[p.nhwc!=0?((q.y/2)*w+q.x/2)*24+channel:channel*w*h+(q.y/2)*w+q.x/2];
+}
+vec4 pixels(ivec2 q){return vec4(coarsePixel(0,q),coarsePixel(1,q),coarsePixel(2,q),coarsePixel(3,q));}
+void refinedFlow(ivec2 q,out vec4 v,out float m){
+ ivec2 size=ivec2(p.w,p.h)/2;
+ vec2 pos=clamp((vec2(q)+.5)/float(2)-.5,vec2(0),vec2(size-1));
+ ivec2 lo=ivec2(floor(pos)),hi=min(lo+1,size-1);vec2 f=fract(pos);
+ v=mix(mix(pixels(lo),pixels(ivec2(hi.x,lo.y)),f.x),mix(pixels(ivec2(lo.x,hi.y)),pixels(hi),f.x),f.y)*float(2);
+ m=mix(mix(coarsePixel(4,lo),coarsePixel(4,ivec2(hi.x,lo.y)),f.x),mix(coarsePixel(4,ivec2(lo.x,hi.y)),coarsePixel(4,hi),f.x),f.y);
+ int i=q.y*p.w+q.x,n=p.w*p.h;
+ v+=vec4(previous[i],previous[n+i],previous[2*n+i],previous[3*n+i]);
+}
+vec4 pixel(int image,ivec2 q){
+ int n=p.w*p.h,i=q.y*p.w+q.x;
+ if(p.nhwc!=0){
+  if(image==0)return vec4(a[i*3],a[i*3+1],a[i*3+2],0);
+  if(image==1)return vec4(b[i*3],b[i*3+1],b[i*3+2],0);
+  if(image==2)return vec4(ea[i*4],ea[i*4+1],ea[i*4+2],ea[i*4+3]);
+  return vec4(eb[i*4],eb[i*4+1],eb[i*4+2],eb[i*4+3]);
+ }
+ if(image==0)return vec4(a[i],a[n+i],a[n*2+i],0);
+ if(image==1)return vec4(b[i],b[n+i],b[n*2+i],0);
+ if(image==2)return vec4(ea[i],ea[n+i],ea[n*2+i],ea[n*3+i]);
+ return vec4(eb[i],eb[n+i],eb[n*2+i],eb[n*3+i]);
+}
+vec4 sampleImage(int image,vec2 pos){
+ pos=clamp(pos,vec2(0),vec2(p.w-1,p.h-1));ivec2 lo=ivec2(floor(pos)),hi=min(lo+1,ivec2(p.w-1,p.h-1));vec2 f=fract(pos);
+ return mix(mix(pixel(image,lo),pixel(image,ivec2(hi.x,lo.y)),f.x),mix(pixel(image,ivec2(lo.x,hi.y)),pixel(image,hi),f.x),f.y);
+}
+struct Values{vec4 a;vec4 b;vec4 ea;vec4 eb;vec4 f;float mask;};
+Values values(ivec2 q){
+ Values v;
+ int n=p.w*p.h,i=q.y*p.w+q.x;
+ refinedFlow(q,v.f,v.mask);
+ flow[i]=v.f.x;flow[n+i]=v.f.y;flow[n*2+i]=v.f.z;flow[n*3+i]=v.f.w;flow[n*4+i]=v.mask;
+ vec2 pos0=vec2(q)+v.f.xy,pos1=vec2(q)+v.f.zw;
+ v.a=sampleImage(0,pos0);v.b=sampleImage(1,pos1);v.ea=sampleImage(2,pos0);v.eb=sampleImage(3,pos1);
+ return v;
+}
+void store(int i,int c,float v){result[i*20+c]=float16_t(v);}
+void main(){
+ ivec2 q=ivec2(gl_GlobalInvocationID.xy);if(q.x>=p.w||q.y>=p.h)return;
+ Values r=values(q);int i=q.y*p.w+q.x;
+ for(int c=0;c<3;c++){store(i,c,r.a[c]);store(i,3+c,r.b[c]);}
+ for(int c=0;c<4;c++){store(i,6+c,r.ea[c]);store(i,10+c,r.eb[c]);}
+ store(i,14,.5);store(i,15,r.mask);
+ for(int c=0;c<4;c++)store(i,16+c,r.f[c]);
+}

@@ -1,0 +1,9 @@
+#version 450
+layout(binding=0) readonly buffer Input {float flow[];};
+layout(binding=1) readonly buffer Mask {float mask[];};
+layout(binding=2,rgba32f) uniform writeonly image2D flowMap;
+layout(binding=3,r32f) uniform writeonly image2D weightMap;
+layout(push_constant) uniform parameter {int w;int h;int plane;} p;
+void main(){ivec2 q=ivec2(gl_GlobalInvocationID.xy);if(q.x>=p.w||q.y>=p.h)return;
+ int i=q.y*p.w+q.x,n=p.plane;imageStore(flowMap,q,vec4(flow[i],flow[n+i],flow[2*n+i],flow[3*n+i]));
+ float m=1.0/(1.0+exp(-clamp(mask[i],-20.0,20.0)));imageStore(weightMap,q,vec4(m));}

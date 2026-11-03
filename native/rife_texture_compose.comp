@@ -1,0 +1,30 @@
+#version 450
+#if NCNN_fp16_storage
+#extension GL_EXT_shader_16bit_storage: require
+#endif
+layout(binding=0) uniform sampler2D previous;
+layout(binding=1) uniform sampler2D current;
+layout(binding=2) uniform sampler2D flowMap;
+layout(binding=3) uniform sampler2D weightMap;
+layout(binding=4,rgba8) uniform writeonly image2D middle;
+layout(push_constant) uniform parameter {
+ int width; int height; int stride; int rows;
+ int workWidth; int workHeight; int workStride; int flowPlane; int left; int top;
+} p;
+vec4 flowAt(ivec2 q){return texelFetch(flowMap,q,0);}
+float maskAt(ivec2 q){return texelFetch(weightMap,q,0).r;}
+vec3 sampleFrame(vec2 q,bool next){
+ q=clamp(q,vec2(0),vec2(p.width-1,p.height-1));vec2 uv=(q+vec2(p.left,p.top)+.5)/vec2(p.stride,p.rows);
+ return next?textureLod(current,uv,0).rgb:textureLod(previous,uv,0).rgb;
+}
+void main(){
+ ivec3 q=ivec3(gl_GlobalInvocationID);if(q.x>=p.width||q.y>=p.height||q.z!=0)return;
+ vec2 scale=vec2(p.width,p.height)/vec2(p.workWidth,p.workHeight);
+ vec2 at=clamp((vec2(q.xy)+0.5)/scale-0.5,vec2(0),vec2(p.workWidth-1,p.workHeight-1));
+ ivec2 a=ivec2(floor(at)),b=min(a+1,ivec2(p.workWidth-1,p.workHeight-1));vec2 f=fract(at);
+ vec4 displacement=mix(mix(flowAt(a),flowAt(ivec2(b.x,a.y)),f.x),mix(flowAt(ivec2(a.x,b.y)),flowAt(b),f.x),f.y);
+ float weight=mix(mix(maskAt(a),maskAt(ivec2(b.x,a.y)),f.x),mix(maskAt(ivec2(a.x,b.y)),maskAt(b),f.x),f.y);
+ if(any(isnan(displacement))||any(isinf(displacement))||isnan(weight)||isinf(weight)){displacement=vec4(0);weight=0.5;}
+ vec3 before=sampleFrame(vec2(q.xy)+displacement.xy*scale,false),after=sampleFrame(vec2(q.xy)+displacement.zw*scale,true);
+ imageStore(middle,q.xy,vec4(clamp(mix(after,before,clamp(weight,0.0,1.0)),0.0,1.0),1.0));
+}

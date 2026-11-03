@@ -1,0 +1,12 @@
+#version 450
+#extension GL_EXT_shader_16bit_storage: require
+layout(binding=0) uniform sampler2D frame;
+layout(binding=1) writeonly buffer Target {float16_t result[];};
+layout(push_constant) uniform parameter {
+ int left;int top;int width;int height;int workWidth;int workHeight;int paddedWidth;int paddedHeight;int stride;int rows;
+} p;
+vec3 sampleFrame(vec2 q){q=clamp(q,vec2(0),vec2(p.width-1,p.height-1));return textureLod(frame,(q+vec2(p.left,p.top)+.5)/vec2(p.stride,p.rows),0).rgb;}
+void main(){ivec2 q=ivec2(gl_GlobalInvocationID.xy);if(q.x>=p.paddedWidth||q.y>=p.paddedHeight)return;
+ vec2 scale=vec2(p.width,p.height)/vec2(p.workWidth,p.workHeight),src=(vec2(min(q,ivec2(p.workWidth-1,p.workHeight-1)))+.5)*scale-.5,radius=max(scale-1,vec2(0))*.5;
+ vec3 v=(sampleFrame(src-radius)+sampleFrame(src+vec2(radius.x,-radius.y))+sampleFrame(src+vec2(-radius.x,radius.y))+sampleFrame(src+radius))*.25;
+ int i=(q.y*p.paddedWidth+q.x)*3;result[i]=float16_t(v.r);result[i+1]=float16_t(v.g);result[i+2]=float16_t(v.b);}

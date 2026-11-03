@@ -1,0 +1,35 @@
+#version 450
+#extension GL_EXT_shader_16bit_storage: require
+// Fuse pixel shuffle, resize, flow scaling and accumulated refinement.
+layout(binding=0) readonly buffer Coarse { float16_t coarse[]; };
+layout(binding=1) readonly buffer Previous { float16_t previous[]; };
+layout(binding=2,rgba32f) uniform writeonly image2D flowMap;
+layout(binding=3,r32f) uniform writeonly image2D weightMap;
+layout(push_constant) uniform parameter { int w; int h; int scale; int stage; int nhwc; } p;
+float pixel(int c,ivec2 q) {
+ int w=p.w/p.scale/2,h=p.h/p.scale/2;
+ int channel=c*4+(q.y%2)*2+q.x%2;
+ return coarse[p.nhwc!=0?((q.y/2)*w+q.x/2)*24+channel:channel*w*h+(q.y/2)*w+q.x/2];
+}
+vec4 pixels(ivec2 q){return vec4(pixel(0,q),pixel(1,q),pixel(2,q),pixel(3,q));}
+
+float coarse0(int c,ivec2 q){int channel=c*4+(q.y%2)*2+q.x%2;return float(previous[((q.y/2)*(p.w/16)+q.x/2)*24+channel]);}
+vec4 vector0(ivec2 q){return vec4(coarse0(0,q),coarse0(1,q),coarse0(2,q),coarse0(3,q));}
+void previousFlow(ivec2 q,out vec4 f,out float m){
+ ivec2 size=ivec2(p.w,p.h)/8;vec2 pos=clamp((vec2(q)+.5)/8.0-.5,vec2(0),vec2(size-1));ivec2 lo=ivec2(floor(pos)),hi=min(lo+1,size-1);vec2 t=fract(pos);
+ f=mix(mix(vector0(lo),vector0(ivec2(hi.x,lo.y)),t.x),mix(vector0(ivec2(lo.x,hi.y)),vector0(hi),t.x),t.y)*8.0;
+ m=mix(mix(coarse0(4,lo),coarse0(4,ivec2(hi.x,lo.y)),t.x),mix(coarse0(4,ivec2(lo.x,hi.y)),coarse0(4,hi),t.x),t.y);
+}
+
+void main(){
+ ivec2 q=ivec2(gl_GlobalInvocationID.xy);if(q.x>=p.w||q.y>=p.h)return;
+ ivec2 size=ivec2(p.w,p.h)/p.scale;
+ vec2 pos=clamp((vec2(q)+.5)/float(p.scale)-.5,vec2(0),vec2(size-1));
+ ivec2 lo=ivec2(floor(pos)),hi=min(lo+1,size-1);vec2 f=fract(pos);
+ vec4 v=mix(mix(pixels(lo),pixels(ivec2(hi.x,lo.y)),f.x),mix(pixels(ivec2(lo.x,hi.y)),pixels(hi),f.x),f.y)*float(p.scale);
+ float m=mix(mix(pixel(4,lo),pixel(4,ivec2(hi.x,lo.y)),f.x),mix(pixel(4,ivec2(lo.x,hi.y)),pixel(4,hi),f.x),f.y);
+ int i=q.y*p.w+q.x,n=p.w*p.h;
+ if(p.stage!=0){vec4 pf;float pm;previousFlow(q,pf,pm);v+=pf;}
+ imageStore(flowMap,q,v);
+ imageStore(weightMap,q,vec4(1.0/(1.0+exp(-clamp(m,-20.0,20.0)))));
+}

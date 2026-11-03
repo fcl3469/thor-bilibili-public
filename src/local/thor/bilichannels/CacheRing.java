@@ -1,0 +1,3 @@
+package local.thor.bilichannels;
+import android.graphics.*;import android.os.SystemClock;
+final class CacheRing {static void draw(Canvas c,Paint p,float x,float y,float r,float progress,boolean busy){p.setStyle(Paint.Style.STROKE);p.setStrokeWidth(Math.max(2,r*.2f));p.setStrokeCap(Paint.Cap.ROUND);p.setColor(0x30fb7299);c.drawCircle(x,y,r,p);p.setColor(0xfffb7299);float start=progress<0?(SystemClock.uptimeMillis()%1100)*360/1100f:-90,sweep=progress<0?(busy?260:0):Math.max(0,Math.min(1,progress))*360;c.drawArc(x-r,y-r,x+r,y+r,start,sweep,false,p);p.setStyle(Paint.Style.FILL);p.setStrokeCap(Paint.Cap.BUTT);}}

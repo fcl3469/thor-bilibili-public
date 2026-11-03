@@ -1,0 +1,690 @@
+{
+  "sdk_url": "https://softwarecenter.qualcomm.com/api/download/software/sdks/Qualcomm_AI_Runtime_Community/All/2.40.0.251030/v2.40.0.251030.zip",
+  "range_downloaded_bytes": 2635447,
+  "files": [
+    {
+      "path": "include/QNN/CPU/QnnCpuCommon.h",
+      "sha256": "1b21288906ee7f12765ee8a5a1a3cd626d9def0496bcc15b13c46dceaca0af83"
+    },
+    {
+      "path": "include/QNN/CPU/QnnCpuGraph.h",
+      "sha256": "0935a4c14648aac6e027ecfeb2f7f326493e1348633595cc8e6cef2b080dbbd8"
+    },
+    {
+      "path": "include/QNN/CPU/QnnCpuOpPackage.h",
+      "sha256": "8fb81f0cf295c29d0d45c30b63f38e51cb6dbd5a376a9332adfe1d7b7091f5e1"
+    },
+    {
+      "path": "include/QNN/DSP/Udo/UdoBase.h",
+      "sha256": "ab1cd5cf26ccbcaa95404f4414c67a449305bd56b209f1fc33803e297bcf2590"
+    },
+    {
+      "path": "include/QNN/DSP/Udo/UdoFlatten.h",
+      "sha256": "f17741785892e92181a980ab26add3b894a8b7bc70b6c21f57b75813cd8fa59c"
+    },
+    {
+      "path": "include/QNN/DSP/Udo/UdoImpl.h",
+      "sha256": "130d61b234f172a839d4f1126d1269523bc4cf574e24865e886a0d0a155ec556"
+    },
+    {
+      "path": "include/QNN/DSP/Udo/UdoImplDsp.h",
+      "sha256": "7b046f526478802db21086f9e0dbcd939849c504cdaf78553995776af8bb2456"
+    },
+    {
+      "path": "include/QNN/DSP/Udo/UdoShared.h",
+      "sha256": "b5869450d41276adba3eb6af6469f8266cf2eeefe298a5dec3ca10a01a08578e"
+    },
+    {
+      "path": "include/QNN/DSP/QnnDspBackend.h",
+      "sha256": "b2f9455c62c25418cd8334fef7909f744235f338c2a62b5661151e975e5fa1fb"
+    },
+    {
+      "path": "include/QNN/DSP/QnnDspCommon.h",
+      "sha256": "cb229c8c4c9de4296022c5b6b104f3c9b1af7921c844d899d2d7fef0f5a7cf2d"
+    },
+    {
+      "path": "include/QNN/DSP/QnnDspDevice.h",
+      "sha256": "289255e38d880257b6a8150dfe9697eeee040f3ff44b8be492f8cb5233a14fb6"
+    },
+    {
+      "path": "include/QNN/DSP/QnnDspGraph.h",
+      "sha256": "eca2aabdb1240a8098a963e43a7b70c2984ff66b5cf4efb5d62a4d9ecc7c480f"
+    },
+    {
+      "path": "include/QNN/DSP/QnnDspOpPackage.h",
+      "sha256": "de12aca93e573418d1b003c6956d64b21f80e442ee2532b525424523f753c866"
+    },
+    {
+      "path": "include/QNN/DSP/QnnDspPerfInfrastructure.h",
+      "sha256": "093406248b7802c9c0f2215988049c84f7391cd734d810c7d923f5c3062a22a2"
+    },
+    {
+      "path": "include/QNN/DSP/QnnDspProfile.h",
+      "sha256": "ed64fe1ba7f2e885f52f840bfec768bd8080b2b91e84798348ddce1488636d47"
+    },
+    {
+      "path": "include/QNN/DSP/QnnDspProperty.h",
+      "sha256": "18e3f1b76327537344abf457a981a009c6431a385ff0ff3391af1cc529edcaad"
+    },
+    {
+      "path": "include/QNN/GPU/QnnGpuBackend.h",
+      "sha256": "aee1465dbedb80b71064abb9c44a14e29601bde99a39e446beeba4755c8ed92c"
+    },
+    {
+      "path": "include/QNN/GPU/QnnGpuCommon.h",
+      "sha256": "563c9e2dc3380591d2151b2d3301d50266ef8a7827d4d9712c945c507b5e4c10"
+    },
+    {
+      "path": "include/QNN/GPU/QnnGpuContext.h",
+      "sha256": "9ded8c82ac9a4016d51f4807ca8ffc071b64d31f5bfaf533691853c8fa90b78d"
+    },
+    {
+      "path": "include/QNN/GPU/QnnGpuGraph.h",
+      "sha256": "58a86b3785525b165571db1353bcb4f3b6e3e05332cbc46d33218512baab095d"
+    },
+    {
+      "path": "include/QNN/GPU/QnnGpuMem.h",
+      "sha256": "095972d0d9b7807efb42ba057f5ac5fa1e00fcc2df693d7dba4ab94740b4a633"
+    },
+    {
+      "path": "include/QNN/GPU/QnnGpuOpPackage.h",
+      "sha256": "b7a8b4ce33a27f0729b9943f2628d19b050c604a524c750e2d7fb36a8ec897e4"
+    },
+    {
+      "path": "include/QNN/GenAiTransformer/QnnGenAiTransformerCommon.h",
+      "sha256": "127b19e204853b5a6332b3b509ff11c67e7e74d7de0a7d55affd47f0ba262a8b"
+    },
+    {
+      "path": "include/QNN/HTA/QnnHtaBackend.h",
+      "sha256": "e4a96f85186b97f24ae1d30aa0bf43af3060432a313a6bd409bbd13693c21413"
+    },
+    {
+      "path": "include/QNN/HTA/QnnHtaCommon.h",
+      "sha256": "9039b0f89038803318628d19cb350db734ad6a8c0b480b72100b07edf1dae57f"
+    },
+    {
+      "path": "include/QNN/HTA/QnnHtaDevice.h",
+      "sha256": "b6eda6f41ecb5fa7e7054d69c372305ccafebe35db43ef5bbbb074aca5d6f5f4"
+    },
+    {
+      "path": "include/QNN/HTA/QnnHtaGraph.h",
+      "sha256": "9806abc5bdce0c280366ff4359e19566a02724284e33c48b43e95d1e8301f0f3"
+    },
+    {
+      "path": "include/QNN/HTA/QnnHtaPerfInfrastructure.h",
+      "sha256": "4aa4d22211f250c9114a4a0ec51d1ac8037a19a2cec00189b778d28fd88af5e4"
+    },
+    {
+      "path": "include/QNN/HTA/QnnHtaProfile.h",
+      "sha256": "cd0ae65fee47389c8f049f97795ccc7e2a102eab00141388e40aa35bfacc825b"
+    },
+    {
+      "path": "include/QNN/HTP/core/tens/block_enumeration.h",
+      "sha256": "2a16c4430d49bbd306247db985d323960a774aa730c034d71ad5016de5d52180"
+    },
+    {
+      "path": "include/QNN/HTP/core/tens/tensor_base.h",
+      "sha256": "e7d4b71d0a66f56110fca945e42194cf348efd08e572dee2354b7656f93c274a"
+    },
+    {
+      "path": "include/QNN/HTP/core/tens/tensor_concrete.h",
+      "sha256": "c0b9e05acf44f37639f20083474e3963841093489d79c606f1ed939fe0cf5f51"
+    },
+    {
+      "path": "include/QNN/HTP/core/tens/tensor_definitions.h",
+      "sha256": "12d707e46d553cfed5e451795acb6efae2461b622e46dc6de37e86532ef78aba"
+    },
+    {
+      "path": "include/QNN/HTP/core/tens/tensor_generator.h",
+      "sha256": "a84f2e4dbc483ad6aa89a94af75879ef0e10d14ac0e0002562c6732848054341"
+    },
+    {
+      "path": "include/QNN/HTP/core/afuncs.h",
+      "sha256": "30b6fbebfce05b51241575d1833ea7a959ce14439e6b595cc3e2ef6edea574f7"
+    },
+    {
+      "path": "include/QNN/HTP/core/allocator.h",
+      "sha256": "6cc9ccd39c9b12b4a3c90c2d61b69a5493f9607047418208d1f19a345b118449"
+    },
+    {
+      "path": "include/QNN/HTP/core/bake_defs.h",
+      "sha256": "261e82318927023326e4c14da23e8c2d024605ec5b236a700e274427e2d1c867"
+    },
+    {
+      "path": "include/QNN/HTP/core/bfloat16.h",
+      "sha256": "5124bb07e3271e91830e1b2d6187b068e9b8ee6b3fdd980d21d1bbc204ca869c"
+    },
+    {
+      "path": "include/QNN/HTP/core/build_options_pub.h",
+      "sha256": "fac9b9ced78eb78febbefb686d655cffa14da901ca844d87ec4d0095d7ba886e"
+    },
+    {
+      "path": "include/QNN/HTP/core/builtin_intrinsics.h",
+      "sha256": "40839ef684238c11fa7a79775727fd77e1f830fb60caf5dbc35988c7e657d706"
+    },
+    {
+      "path": "include/QNN/HTP/core/cc_pp.h",
+      "sha256": "8138487aaba064cac9b65fed140267285af0d429c810243375f7c8dd188e942f"
+    },
+    {
+      "path": "include/QNN/HTP/core/check_hvx.h",
+      "sha256": "fdaeac196a78bc8766d5736aee4f6cdd36b510e2eaa9950b94830999592f501c"
+    },
+    {
+      "path": "include/QNN/HTP/core/conditional_default_deleter.h",
+      "sha256": "4404eb653e422da765fe4e38548e67edaf0e575ba9b1d3b25a052ae3a41d09d9"
+    },
+    {
+      "path": "include/QNN/HTP/core/constraints.h",
+      "sha256": "a39dea1ca64a7edc73598223a19c9eb05d46113f369c6b4448b14681acd9ce3e"
+    },
+    {
+      "path": "include/QNN/HTP/core/const_extent_descriptor.h",
+      "sha256": "86bd0705c8f49f6e841d21a7cc68b253d8d958b436c7fe15d8d8d89a9e9d2911"
+    },
+    {
+      "path": "include/QNN/HTP/core/const_extent_shared.h",
+      "sha256": "104208ae0cc84b300690b055da45a407474e7ef263042140c219c063b81bd8a2"
+    },
+    {
+      "path": "include/QNN/HTP/core/conversions.h",
+      "sha256": "24b5fd722639a95e69db9c34e67b4252e5cf8957dcf352abb7fef6941200a55b"
+    },
+    {
+      "path": "include/QNN/HTP/core/cost.h",
+      "sha256": "adc493e5894b4f43186d5c23aa82704da205b6b5c20ddda8f60bdb8c2498bd4a"
+    },
+    {
+      "path": "include/QNN/HTP/core/cost_funcs.h",
+      "sha256": "39a098797873d4f10f8f885198fa8ca665557dd628bdbb11cc4d455e88ffa856"
+    },
+    {
+      "path": "include/QNN/HTP/core/crate.h",
+      "sha256": "fea7d7ed6a6a996686024b9a918c62d259b9e460cd8d73017847e0b62f2e6010"
+    },
+    {
+      "path": "include/QNN/HTP/core/ctor_hook.h",
+      "sha256": "b2cf6716e543509d84f8342bce6d6172447bd7a8cfa43d4ed22fc32421daf46a"
+    },
+    {
+      "path": "include/QNN/HTP/core/c_tricks.h",
+      "sha256": "4ac4b90da6244a9ea458ca82b06a63404a9a5c71b8551da90d0bae4c6526aa51"
+    },
+    {
+      "path": "include/QNN/HTP/core/dcrate_inlines.h",
+      "sha256": "3fc51162fc1a3164f6641cf286e49ce3f510e3f94f34c0520eaafb63c8e1d256"
+    },
+    {
+      "path": "include/QNN/HTP/core/deserializer.h",
+      "sha256": "5b97109422c047a3bb6245b41f067bd286e9795c31a499f84d970ee39f18bd91"
+    },
+    {
+      "path": "include/QNN/HTP/core/deserialize_tensors.h",
+      "sha256": "4bbce678fdaa693c62f47b25e8221d78299b8d94e3d144e64e7dc134bf84421f"
+    },
+    {
+      "path": "include/QNN/HTP/core/deser_concurrent.h",
+      "sha256": "efa23466cb2c975a12eb77d81ca61e2b05941bfbcd3d5b0159611c44de738f1b"
+    },
+    {
+      "path": "include/QNN/HTP/core/deser_concurrent_defs.h",
+      "sha256": "f253f00a19b71fdca9995701bcc426e06768994c7ce7ac74733cbe3ad2324862"
+    },
+    {
+      "path": "include/QNN/HTP/core/dtype.h",
+      "sha256": "bf8fe26471597a5555b200f8ef2128dede66b2277c04bb02020604da3c7f87ed"
+    },
+    {
+      "path": "include/QNN/HTP/core/dtype_enum.h",
+      "sha256": "f438bb49194d7a4d255e3539d8c874486a14523dd1ef91205a7e3b5cd4d93ae1"
+    },
+    {
+      "path": "include/QNN/HTP/core/dynamic_tensors.h",
+      "sha256": "40064b729aa916f3c003fe3b05ec47abc86d85778c70e7db3889e29eaa389315"
+    },
+    {
+      "path": "include/QNN/HTP/core/executable.h",
+      "sha256": "7345499e2518543ddca93598f2eea9c5fea8749d457cfc71e98eddb1267e6cff"
+    },
+    {
+      "path": "include/QNN/HTP/core/flags.h",
+      "sha256": "0ff3a82b2b51f9e932d4ed85cec5b698edde089f364bd067c6b944c4db2b34e4"
+    },
+    {
+      "path": "include/QNN/HTP/core/float16.h",
+      "sha256": "9ab8e2bb61991578b154849e7cae7e1102d5cc99b2542f5cbce6c426cd81c9ce"
+    },
+    {
+      "path": "include/QNN/HTP/core/forward_classes.h",
+      "sha256": "5c6d03f3b205194e7627eff520c297b3e9e7ff0b70983146091f0dee468e3141"
+    },
+    {
+      "path": "include/QNN/HTP/core/graph_handle_defs.h",
+      "sha256": "2dc58d3b252cfd06cc4a44cd9ae86f1c36cc4b6b131a0f1b416aa6f5bd6e7905"
+    },
+    {
+      "path": "include/QNN/HTP/core/graph_status.h",
+      "sha256": "cae08664eb0254fb0040c1f1804e8757f0782399e8dbbd3a52032ef7a30d351b"
+    },
+    {
+      "path": "include/QNN/HTP/core/hexagon_nn_types.h",
+      "sha256": "57b855949bb3be40eca0d49c83db88626fb5c618f3bc398afd798e9a0297719d"
+    },
+    {
+      "path": "include/QNN/HTP/core/hvx_mathops.h",
+      "sha256": "d8c7c640c20aac4e711169e677f9617335baecde871d0425e443509b07d503d2"
+    },
+    {
+      "path": "include/QNN/HTP/core/interface.h",
+      "sha256": "38c78691e06b5a0c7da9a29861a3c2d4dfc1bfd3992a8cad4857994ad1614cce"
+    },
+    {
+      "path": "include/QNN/HTP/core/interface_defs.h",
+      "sha256": "f0869334ba44e810eebb3143602ff35edaa77d2613c4b7c640eea40c559ed2d7"
+    },
+    {
+      "path": "include/QNN/HTP/core/intrinsics.h",
+      "sha256": "1bbf3b77b5a3f2b6feafb473ec9b130a401007a81652570311b505554f8feb4a"
+    },
+    {
+      "path": "include/QNN/HTP/core/is_detected.h",
+      "sha256": "e41f21456e13e086880ee2c09b8d92f2c9074c73c4f5ba86353f56b74870f59d"
+    },
+    {
+      "path": "include/QNN/HTP/core/log.h",
+      "sha256": "81e820beeee98ca550a21df7f9d163fcda09c88572cfd3a6b003ba74e37eab3c"
+    },
+    {
+      "path": "include/QNN/HTP/core/macros_attribute.h",
+      "sha256": "2f6c37f6f3adbc20da00314d11d3f8378d0b9c8e32434f31fe67bcc183eb056e"
+    },
+    {
+      "path": "include/QNN/HTP/core/match_op.h",
+      "sha256": "d4a282c446b44e6971db7dbb67b026b50c0a0de67241cdefec4038e3e66b7ef2"
+    },
+    {
+      "path": "include/QNN/HTP/core/memory_layout.h",
+      "sha256": "8050a446d3746062dedf10579d19595e905ea82d098b051f98e3afdbed527df8"
+    },
+    {
+      "path": "include/QNN/HTP/core/minihash.h",
+      "sha256": "6d8cd27e66cdcf7129b7e697a2c44429642c9eae5666153950478226386aed04"
+    },
+    {
+      "path": "include/QNN/HTP/core/oexpr.h",
+      "sha256": "2093b0ac17c8ef7e5913c24f7d5320719aeea916629530c909cc597b0f7aadc5"
+    },
+    {
+      "path": "include/QNN/HTP/core/oexpr_post.h",
+      "sha256": "e8a1a2d50c148558bc834dc8af07e96f47ad8aa064d59826cc34a95ea4770249"
+    },
+    {
+      "path": "include/QNN/HTP/core/op.h",
+      "sha256": "2eb5c0fd744c00afd896fef3dc3b5d81b6ee57ff2b158e9679012ae8f61559e2"
+    },
+    {
+      "path": "include/QNN/HTP/core/opname_tag.h",
+      "sha256": "009f4ad12952cd50cbcf7e30c7a3ec24c512c794d6ddf635082e3f3a393ea3be"
+    },
+    {
+      "path": "include/QNN/HTP/core/ops_opts_registration.h",
+      "sha256": "6a89623a9ed69453c639e9d5eeac7ee58e543e43fbed57f12050bc6fce94c58b"
+    },
+    {
+      "path": "include/QNN/HTP/core/ops_opts_registration_defs.h",
+      "sha256": "4857aeb5ac29179d3ef97e3f9e2709ea9aa06126a9043884dc55384b85cd68ac"
+    },
+    {
+      "path": "include/QNN/HTP/core/optimize.h",
+      "sha256": "5f00aa3f3b126a58e7db9cef827ffe8b80b7efac3378d1b034b08a9c1998f3d8"
+    },
+    {
+      "path": "include/QNN/HTP/core/optimize_defs.h",
+      "sha256": "a006c22a5c1349e50df162b4d01879d3c278de57ce4a95359152368870cbb34f"
+    },
+    {
+      "path": "include/QNN/HTP/core/optimize_flags.h",
+      "sha256": "d5de587748e04c30580aa37c5919d761ee29d82c0d2d6f96bc36001d8e59a9a4"
+    },
+    {
+      "path": "include/QNN/HTP/core/optim_filter.h",
+      "sha256": "493cee4b30a344998619f90d2439845495cca2a8e5407a7d9577d14438841d45"
+    },
+    {
+      "path": "include/QNN/HTP/core/op_def.h",
+      "sha256": "6eaf4409598eab1e11d45b5076843cdd8bafa8ee28420ac5564e982e72c92ba9"
+    },
+    {
+      "path": "include/QNN/HTP/core/op_extra_info.h",
+      "sha256": "2d8a9a6e2fd0fe0fe5903a908261d6c47ff24079067ba561ce309a837747670d"
+    },
+    {
+      "path": "include/QNN/HTP/core/op_info.h",
+      "sha256": "4d7ac1a6ae9390d983e4937364ba2288e9f33757f890e371e54460e64b813d6b"
+    },
+    {
+      "path": "include/QNN/HTP/core/op_io_ptrs.h",
+      "sha256": "4545320a576d4b41886aefc0439e3a689f5da614cf5275d260e6a1154c5e3f0b"
+    },
+    {
+      "path": "include/QNN/HTP/core/op_package_feature_support.h",
+      "sha256": "16cb1b8e857f0ae66f701466c25c9d31c89dc8b212604f93fd2eec0aa5d5c7fc"
+    },
+    {
+      "path": "include/QNN/HTP/core/op_package_name.h",
+      "sha256": "a2bcc859ed93c19694f13f64262cb356a201a2f0d3950c6018f40a1ac9940e72"
+    },
+    {
+      "path": "include/QNN/HTP/core/op_register.h",
+      "sha256": "26484b4b1fd94bfe27cbdf9e0918d0b33537839a511e329ef5f59dc67f02279b"
+    },
+    {
+      "path": "include/QNN/HTP/core/op_register_ext.h",
+      "sha256": "95d3082f1d1441068fffda1d0cd05daa32c68128987f40fab5d8fc619bc234b8"
+    },
+    {
+      "path": "include/QNN/HTP/core/op_register_types.h",
+      "sha256": "664dc3018797fcbb28a75907b64602243f5afe04aa0324d0a4c92a4b3917c23b"
+    },
+    {
+      "path": "include/QNN/HTP/core/op_registry.h",
+      "sha256": "97b6e7ba1fac48bcce4454aa9541aa596181f4988d0f78ab637a9bb41dae8dec"
+    },
+    {
+      "path": "include/QNN/HTP/core/op_utils.h",
+      "sha256": "8f2874ccf201b022a4837e1117f3d7f0be9134e7f25cddbb8644c94a1c82b487"
+    },
+    {
+      "path": "include/QNN/HTP/core/padding.h",
+      "sha256": "a92f2c0f93bf4463f8dbff5b365fc74945c0114d20cbc8ea6e508633b7390f02"
+    },
+    {
+      "path": "include/QNN/HTP/core/pco_declarations.h",
+      "sha256": "420ca6fff08af6fddd38b07d2fc7db68bce1d66583c93d51631b21e4f16ff522"
+    },
+    {
+      "path": "include/QNN/HTP/core/perf_timing.h",
+      "sha256": "2cca75d5b0c8b7fdc43b98a4752276d268b8c29210a9f7392e6a9abd2e993afa"
+    },
+    {
+      "path": "include/QNN/HTP/core/pickle_header_tags.h",
+      "sha256": "4ec0d70ce0e1614f38824be195ecdca58cd398cc54e9b0b5a36e978b5806b16c"
+    },
+    {
+      "path": "include/QNN/HTP/core/serdes_tensors.h",
+      "sha256": "cda613369da47f56129949220ec4e60d115360290d2b43cbadac23aef1dc34f9"
+    },
+    {
+      "path": "include/QNN/HTP/core/serialize_defs.h",
+      "sha256": "ea4ecdfa043b313f5d2c425ad6a48fd3094ebed42760f751bc09a0f881091e02"
+    },
+    {
+      "path": "include/QNN/HTP/core/serialize_oplist.h",
+      "sha256": "1094f295e63a10fddccc16bef50f81ab1e133e9b42ba0344ffee81368cdeea35"
+    },
+    {
+      "path": "include/QNN/HTP/core/serialize_register.h",
+      "sha256": "7fe72d4a604df98a02591110103ee9437040b6c3dc8b8e1beb8dda8a748e839f"
+    },
+    {
+      "path": "include/QNN/HTP/core/shape.h",
+      "sha256": "0c3f4d1325590749da292327afc9e1fd13ab5d0b09aa866b8f3ad672a765a977"
+    },
+    {
+      "path": "include/QNN/HTP/core/simple_reg.h",
+      "sha256": "579220f885b1de232d9c9cee09967164d51e5f9b90de10354c4040c135fd89fd"
+    },
+    {
+      "path": "include/QNN/HTP/core/size_align_code.h",
+      "sha256": "9b59f50697cefc1e9f6c2f7cb0a557b2575e5537468b0dcb277d484f1e644937"
+    },
+    {
+      "path": "include/QNN/HTP/core/splithist.h",
+      "sha256": "c3d6f982a9280ec6ea5781718333f7b8042b8c3bca67dae0ea24cdd67bf45538"
+    },
+    {
+      "path": "include/QNN/HTP/core/string_registry2.h",
+      "sha256": "cf44f43b29e5546168b7f175cac512c54d72b49091bd8a24602d2b682a34c901"
+    },
+    {
+      "path": "include/QNN/HTP/core/template_help.h",
+      "sha256": "18827b87a2620dc05fd9160efdf944bba98f0a3bdd111ee9ff8a37e800551908"
+    },
+    {
+      "path": "include/QNN/HTP/core/template_help_tensor_ext.h",
+      "sha256": "907a158001fd7f0138bfba2ec19543b843a978faa4ba6dd66a8944f0ec8ca84f"
+    },
+    {
+      "path": "include/QNN/HTP/core/tensor.h",
+      "sha256": "2825460ff67e0a8b5d9d1f9a662d4db0dbeccf9628f5b91ff22e20098846b107"
+    },
+    {
+      "path": "include/QNN/HTP/core/tensor_info.h",
+      "sha256": "93b2b46f168e20b72112f1f5fd01673c2dee590a17cc8bc6282e41c338edfc9b"
+    },
+    {
+      "path": "include/QNN/HTP/core/tensor_iterator.h",
+      "sha256": "3fae866acef21d58e322ff7fb9ed91dd2cf34190b812348408d8f044253d979b"
+    },
+    {
+      "path": "include/QNN/HTP/core/tile_extract.h",
+      "sha256": "59478b2554442bdb2434f39e937d0ddce3355248777d51f23d86338f83b4828b"
+    },
+    {
+      "path": "include/QNN/HTP/core/type_help.h",
+      "sha256": "f6c70b5ca729c1ba0d72ac5fec109e015f2af58694bd03fe529971541588202a"
+    },
+    {
+      "path": "include/QNN/HTP/core/type_name.h",
+      "sha256": "4cf8e554a025e7e71839b5435b96eb268443511046c23b01ed9bef66035c9332"
+    },
+    {
+      "path": "include/QNN/HTP/core/typical_op.h",
+      "sha256": "73a17054d768eba43df94c763003a12d5618f43a6385b4252a3b1ffaeba1617f"
+    },
+    {
+      "path": "include/QNN/HTP/core/unique_types.h",
+      "sha256": "71eccae5e5c5e37f8f363378f1e6f3af73bfb87e742fcc94d3b079839da43fb2"
+    },
+    {
+      "path": "include/QNN/HTP/core/weak_linkage.h",
+      "sha256": "2b7c4d6ff451f32199717f59e9f45bddcac1f1ca47717bccc485639811d8a734"
+    },
+    {
+      "path": "include/QNN/HTP/QnnHtpCommon.h",
+      "sha256": "de292313570a32374ec2e864619d364c9e0e462f08b66844bb84c7e24b6c5d72"
+    },
+    {
+      "path": "include/QNN/HTP/QnnHtpContext.h",
+      "sha256": "0c49afbede9ad7be2678215f9937a5a27b39b566cbe127b6066adbc2c2aea02f"
+    },
+    {
+      "path": "include/QNN/HTP/QnnHtpDevice.h",
+      "sha256": "924b839ddb1f911dd0872d5096845b2356adeda774521d3068a2519e0c948bb1"
+    },
+    {
+      "path": "include/QNN/HTP/QnnHtpGraph.h",
+      "sha256": "ced1f334b71de441dcdcf1893d44ba178434b38c028f2eb98a496dc7b0f5ef3b"
+    },
+    {
+      "path": "include/QNN/HTP/QnnHtpMem.h",
+      "sha256": "27766dec8f8dcae3f160915f96d14517dcc06a26a958163ef53cbb295d06f00b"
+    },
+    {
+      "path": "include/QNN/HTP/QnnHtpPerfInfrastructure.h",
+      "sha256": "ddeb8f6d7f5e4bd8355d2ffa428630dbd09429e57353d71afc6758bebd4c476f"
+    },
+    {
+      "path": "include/QNN/HTP/QnnHtpProfile.h",
+      "sha256": "33f77196cc27519dc115a02fca4490d997a15d50e4872465d71dbe59125a3ed2"
+    },
+    {
+      "path": "include/QNN/HTP/QnnHtpProperty.h",
+      "sha256": "766da7f9133a4d7b00ea5b2c40197497f096e830129edff54b50e3b440ab5948"
+    },
+    {
+      "path": "include/QNN/HTP/QnnHtpSystemContext.h",
+      "sha256": "5e57862a69b65f3e8549f89ff1e9350ba0804423a4bdad16b690a13d2d3e461f"
+    },
+    {
+      "path": "include/QNN/HTPQEMU/QnnHtpQemuCommon.h",
+      "sha256": "95fdad3de769856bc19dde91cf17de5e96bd2060acb7a45635ff447d3ac7a461"
+    },
+    {
+      "path": "include/QNN/IR/QnnIrCommon.h",
+      "sha256": "1faf3b653b8707539de6aa7d45e65c325141f7187bc40060b0a79cab8308c469"
+    },
+    {
+      "path": "include/QNN/IR/QnnIrGraph.h",
+      "sha256": "657d8b5f13e03080dace86e533100e93e266bf6010ed660307b09e6e7cd7cefa"
+    },
+    {
+      "path": "include/QNN/LPAI/QnnLpaiBackend.h",
+      "sha256": "b36d36b365184ba951cf72aff324541d5854d402895bfcfc91eaa70a57ece3e3"
+    },
+    {
+      "path": "include/QNN/LPAI/QnnLpaiCommon.h",
+      "sha256": "0d53c2a1a1bd140b2160b9307d703627decbb66a44dc28667b7358abf2e59ed1"
+    },
+    {
+      "path": "include/QNN/LPAI/QnnLpaiContext.h",
+      "sha256": "a5416d6ce5b8c679369c66192d880dcd35c3da6abb8112d1ae4f35d72c87924d"
+    },
+    {
+      "path": "include/QNN/LPAI/QnnLpaiContextInt.h",
+      "sha256": "a4ee18e6c94963262bca24da8efb284a4e1535007931198422e45a59169cc5ad"
+    },
+    {
+      "path": "include/QNN/LPAI/QnnLpaiDevice.h",
+      "sha256": "bead0c634e306983d756f350c15d8cb943c40e172e7de708e8497a83fa3305fc"
+    },
+    {
+      "path": "include/QNN/LPAI/QnnLpaiGraph.h",
+      "sha256": "8d762e2734153e5192736b941f43254e78602052c76acbb3f2412da2937f4ddb"
+    },
+    {
+      "path": "include/QNN/LPAI/QnnLpaiGraphInternal.h",
+      "sha256": "b364550812514855874d162288acb5f432c7b36f386f68cda52dbee79537def1"
+    },
+    {
+      "path": "include/QNN/LPAI/QnnLpaiGraphPrepare.h",
+      "sha256": "fc2e4e3930b780f8c24b8954f5b2f154eb5499127a391073620aa817574e3bff"
+    },
+    {
+      "path": "include/QNN/LPAI/QnnLpaiMem.h",
+      "sha256": "06747852e73fd988c9c34ce9ed5278e26b90c11a6dc37570041e48bf20dd26d4"
+    },
+    {
+      "path": "include/QNN/Saver/QnnSaver.h",
+      "sha256": "28d6050256608d5e8f7cc8ca44de2169bd5a4710852022e94785d863efdd2727"
+    },
+    {
+      "path": "include/QNN/Saver/QnnSaverCommon.h",
+      "sha256": "24d37541ebe772b0c1aebc7d1bdcdce1d496a6c33a15e1fa6fc4a762e8bbeb89"
+    },
+    {
+      "path": "include/QNN/System/QnnSystemCommon.h",
+      "sha256": "36dc03e903b04fa5737601d38d61f9b7579bf56170204391d606d225891351ea"
+    },
+    {
+      "path": "include/QNN/System/QnnSystemContext.h",
+      "sha256": "47cf78fcf4514eddf625b5ecb9d9499ace070c960127974f05d0ea228158f835"
+    },
+    {
+      "path": "include/QNN/System/QnnSystemDlc.h",
+      "sha256": "1bbad2ec7d1804facb56a3401b321e597b9c71545eef9196e9b9c337cfb83507"
+    },
+    {
+      "path": "include/QNN/System/QnnSystemInterface.h",
+      "sha256": "eda206c96ce803175ec5fee0115bbb64b2c8a6c92dff5799cb97f9df3ba97e20"
+    },
+    {
+      "path": "include/QNN/System/QnnSystemLog.h",
+      "sha256": "50a12f15a0d8f4d10555ef05cac1313339a262f12df313d8a1b05a33a8872ec2"
+    },
+    {
+      "path": "include/QNN/System/QnnSystemProfile.h",
+      "sha256": "6a7991d17152477683d9f931bd97d6f8bab27d5ebec59e4d00af5d54e01cd282"
+    },
+    {
+      "path": "include/QNN/System/QnnSystemTensor.h",
+      "sha256": "398712e0ff6cb9254d1988b935d2ff1665797897143e4bd044d44e009c6f944e"
+    },
+    {
+      "path": "include/QNN/TFLiteDelegate/QnnTFLiteDelegate.h",
+      "sha256": "b9ba99cb6716260191152438ef1668e04a7cc085665c85a9ff0c77f599e3a4d4"
+    },
+    {
+      "path": "include/QNN/QnnBackend.h",
+      "sha256": "e6830dc4e5d00691cc42c2f09795d5c21c7a918e16573a83dabafd2b4d5f37c1"
+    },
+    {
+      "path": "include/QNN/QnnCommon.h",
+      "sha256": "b7a989f49a8d95ffdd8191a5668fa04a2e4a5327448f88bbff8e6704ee71ca17"
+    },
+    {
+      "path": "include/QNN/QnnContext.h",
+      "sha256": "81bd99ea5761ae88b50b577fd656b7edbf5ea782e3b75caeb7329530eb0d4d50"
+    },
+    {
+      "path": "include/QNN/QnnDevice.h",
+      "sha256": "b7c27b27957103bfcfe7ad1a890df810b458bd88eb12d655e850547939779fb4"
+    },
+    {
+      "path": "include/QNN/QnnError.h",
+      "sha256": "0ac4a282886b24457090fac0e4198601fccd1166611b8d9bc0d3bed74032e7eb"
+    },
+    {
+      "path": "include/QNN/QnnGlobalConfig.h",
+      "sha256": "6a057b4e71ccf76e2c1dbd4b65341e2373feeb6739b602e05e96c4feca8e5a1a"
+    },
+    {
+      "path": "include/QNN/QnnGraph.h",
+      "sha256": "64393d832324496f36feb29a3504dfaf1abf503986e0207fb54cbe19c270327d"
+    },
+    {
+      "path": "include/QNN/QnnInterface.h",
+      "sha256": "3b22c9f9f5f7a0040db7a075075e7c2262e175d52f29d7301ac82fc2e5dfcc86"
+    },
+    {
+      "path": "include/QNN/QnnLog.h",
+      "sha256": "fa4691cf9dc20b6013c8eab6e906f85a15eea41bb95ce734503ca8ce500a5ad2"
+    },
+    {
+      "path": "include/QNN/QnnMem.h",
+      "sha256": "dcca91aad212b1fd541afe4f1e1efad94f3e52933f1bda61a8c4b39c0ec97944"
+    },
+    {
+      "path": "include/QNN/QnnOpDef.h",
+      "sha256": "98981368d5131428c4d708cba731747a1b914b6e3c1260719eeacdd9eba430f4"
+    },
+    {
+      "path": "include/QNN/QnnOpPackage.h",
+      "sha256": "3b7f3f06497b67d9fc8343189575f29db4f300d3abdb92b7daf8c950b11f52fc"
+    },
+    {
+      "path": "include/QNN/QnnProfile.h",
+      "sha256": "0aff7acd395485a8190c8dc68727e05b2fbc6d0cce003911a5e71f7e6533dcb7"
+    },
+    {
+      "path": "include/QNN/QnnProperty.h",
+      "sha256": "077ef1c4a9dcb1116392ca4af54918758666b988a18ed5df261618a2a7b5bed0"
+    },
+    {
+      "path": "include/QNN/QnnSdkBuildId.h",
+      "sha256": "2c150ac4256f0fdf96c971d8b2f292cf6183ea3fac353941de0e4bb5a8c35f79"
+    },
+    {
+      "path": "include/QNN/QnnSignal.h",
+      "sha256": "0033ff4c0939b85115be64e1e126b8d3b184146e6e912b9cd4d1ebfce689b9b3"
+    },
+    {
+      "path": "include/QNN/QnnTensor.h",
+      "sha256": "44cb3bbba83ca522b3c2b02be725b0ad8d9d4973f08ed8a0972fef7abd05b254"
+    },
+    {
+      "path": "include/QNN/QnnTypes.h",
+      "sha256": "9be2bd7c8a1458a899dbe5a649edec379bfbf7a9b0240e01dd5499c047869707"
+    }
+  ]
+}

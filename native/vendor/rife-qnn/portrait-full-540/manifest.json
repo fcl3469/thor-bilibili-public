@@ -1,0 +1,9 @@
+{
+  "width": 544,
+  "height": 960,
+  "stages": 4,
+  "dtype": "float16",
+  "fold_beta": false,
+  "layout": "NHWC",
+  "source_sha256": "8866a83e79676b57686d915f37663e306d1c7f30d1cbbca50d5809bfae42c212"
+}

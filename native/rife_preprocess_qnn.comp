@@ -1,0 +1,22 @@
+#version 450
+#extension GL_EXT_shader_16bit_storage: require
+layout(binding=0) readonly buffer Source { uint rgba[]; };
+layout(binding=1) writeonly buffer Target { float16_t normalized[]; };
+layout(binding=2) writeonly buffer Time { float16_t timestep[]; };
+layout(push_constant) uniform parameter {
+ int sourceWidth; int sourcePlane; int left; int top;
+ int width; int height; int paddedWidth; int paddedHeight; int targetPlane;
+ int targetWidth; int targetHeight; int writeTime;
+} p;
+vec3 pixel(ivec2 q){q=clamp(q,ivec2(0),ivec2(p.width-1,p.height-1));return unpackUnorm4x8(rgba[(p.top+q.y)*p.sourceWidth+p.left+q.x]).rgb;}
+vec3 sampleFrame(vec2 src){src=clamp(src,vec2(0),vec2(p.width-1,p.height-1));ivec2 a=ivec2(floor(src)),b=min(a+1,ivec2(p.width-1,p.height-1));vec2 f=fract(src);return mix(mix(pixel(a),pixel(ivec2(b.x,a.y)),f.x),mix(pixel(ivec2(a.x,b.y)),pixel(b),f.x),f.y);}
+void main(){
+ ivec3 q=ivec3(gl_GlobalInvocationID);if(q.x>=p.paddedWidth||q.y>=p.paddedHeight||q.z!=0)return;
+ vec2 scale=vec2(p.width,p.height)/vec2(p.targetWidth,p.targetHeight);
+ vec2 src=(vec2(min(q.x,p.targetWidth-1),min(q.y,p.targetHeight-1))+.5)*scale-.5;
+ // Four-tap prefilter reduces aliasing when estimating on a smaller image.
+ vec2 radius=max(scale-1.0,vec2(0))*.5;
+ vec3 v=(sampleFrame(src-radius)+sampleFrame(src+vec2(radius.x,-radius.y))+sampleFrame(src+vec2(-radius.x,radius.y))+sampleFrame(src+radius))*.25;
+ int i=(q.y*p.paddedWidth+q.x)*3;normalized[i]=float16_t(v.r);normalized[i+1]=float16_t(v.g);normalized[i+2]=float16_t(v.b);
+ if(p.writeTime!=0)timestep[q.y*p.paddedWidth+q.x]=float16_t(.5);
+}

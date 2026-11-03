@@ -1,0 +1,65 @@
+--- a/src/allocator.cpp
++++ b/src/allocator.cpp
+@@ -2319,6 +2319,8 @@
+ VkImageMemory* VkAndroidHardwareBufferImageAllocator::fastMalloc(int /*w*/, int /*h*/, int /*c*/, size_t /*elemsize*/, int /*elempack*/)
+ {
+     VkResult ret;
++    const bool rgb = bufferFormatProperties.format == VK_FORMAT_R8G8B8A8_UNORM || bufferFormatProperties.format == VK_FORMAT_B8G8R8A8_UNORM || bufferFormatProperties.format == VK_FORMAT_A2B10G10R10_UNORM_PACK32 || bufferFormatProperties.format == VK_FORMAT_A2R10G10B10_UNORM_PACK32;
++
+ 
+     VkExternalFormatANDROID externalFormat;
+     externalFormat.sType = VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID;
+@@ -2327,7 +2329,7 @@
+ 
+     VkExternalMemoryImageCreateInfo externalMemoryImageCreateInfo;
+     externalMemoryImageCreateInfo.sType = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO,
+-    externalMemoryImageCreateInfo.pNext = &externalFormat,
++    externalMemoryImageCreateInfo.pNext = rgb ? 0 : &externalFormat,
+     externalMemoryImageCreateInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID;
+ 
+     VkImageCreateInfo imageCreateInfo;
+@@ -2335,7 +2337,7 @@
+     imageCreateInfo.pNext = &externalMemoryImageCreateInfo;
+     imageCreateInfo.flags = 0;
+     imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
+-    imageCreateInfo.format = VK_FORMAT_UNDEFINED;
++    imageCreateInfo.format = rgb ? bufferFormatProperties.format : VK_FORMAT_UNDEFINED;
+     imageCreateInfo.extent.width = bufferDesc.width;
+     imageCreateInfo.extent.height = bufferDesc.height;
+     imageCreateInfo.extent.depth = 1;
+@@ -2409,11 +2411,11 @@
+ 
+     VkImageViewCreateInfo imageViewCreateInfo;
+     imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+-    imageViewCreateInfo.pNext = &samplerYcbcrConversionInfo;
++    imageViewCreateInfo.pNext = rgb ? 0 : &samplerYcbcrConversionInfo;
+     imageViewCreateInfo.flags = 0;
+     imageViewCreateInfo.image = image;
+     imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+-    imageViewCreateInfo.format = VK_FORMAT_UNDEFINED;
++    imageViewCreateInfo.format = rgb ? bufferFormatProperties.format : VK_FORMAT_UNDEFINED;
+     imageViewCreateInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+     imageViewCreateInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+     imageViewCreateInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+@@ -2475,6 +2477,10 @@
+         NCNN_LOGE("vkGetAndroidHardwareBufferPropertiesANDROID failed %d", ret);
+         return -1;
+     }
++
++    // EGL RGBA render targets require their concrete format and no YCbCr conversion.
++    if (bufferFormatProperties.format == VK_FORMAT_R8G8B8A8_UNORM || bufferFormatProperties.format == VK_FORMAT_B8G8R8A8_UNORM || bufferFormatProperties.format == VK_FORMAT_A2B10G10R10_UNORM_PACK32 || bufferFormatProperties.format == VK_FORMAT_A2R10G10B10_UNORM_PACK32)
++        return 0;
+ 
+     // setup samplerYcbcrConversion
+     VkExternalFormatANDROID externalFormat;
+--- a/src/pipeline.cpp
++++ b/src/pipeline.cpp
+@@ -483,7 +483,7 @@
+ 
+     VkSamplerCreateInfo samplerCreateInfo;
+     samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+-    samplerCreateInfo.pNext = &samplerYcbcrConversionInfo;
++    samplerCreateInfo.pNext = ahb_im_allocator->samplerYcbcrConversion ? &samplerYcbcrConversionInfo : 0;
+     samplerCreateInfo.magFilter = need_resize ? VK_FILTER_LINEAR : VK_FILTER_NEAREST;
+     samplerCreateInfo.minFilter = need_resize ? VK_FILTER_LINEAR : VK_FILTER_NEAREST;
+     samplerCreateInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;

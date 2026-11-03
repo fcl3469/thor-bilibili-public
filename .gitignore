@@ -1,0 +1,11 @@
+build/
+.signing
+__pycache__/
+*.pyc
+.env
+.env.*
+local.properties
+baseline.json
+*.p12
+*.jks
+*.keystore

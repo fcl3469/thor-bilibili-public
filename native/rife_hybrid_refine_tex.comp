@@ -1,0 +1,57 @@
+#version 450
+// Stage 3: hardware bilinear frame sampling while retaining the FP32 refined flow.
+#extension GL_EXT_shader_16bit_storage: require
+#extension GL_EXT_shader_explicit_arithmetic_types_float16: require
+layout(binding=0) uniform sampler2D A;
+layout(binding=1) uniform sampler2D B;
+layout(binding=2) uniform sampler2D EA;
+layout(binding=3) uniform sampler2D EB;
+layout(binding=4) writeonly buffer Flow { float flow[]; };
+layout(binding=5) writeonly buffer X { f16vec4 result[]; };
+layout(binding=6) readonly buffer Coarse { float16_t coarse[]; };
+layout(binding=7) readonly buffer Previous { float previous[]; };
+layout(push_constant) uniform parameter { int w; int h; int scale; int stage; int nhwc; } p;
+float coarsePixel(int c,ivec2 q){
+ int w=p.w/2/2,h=p.h/2/2;
+ int channel=c*4+(q.y%2)*2+q.x%2;
+ return float(coarse[p.nhwc!=0?((q.y/2)*w+q.x/2)*24+channel:channel*w*h+(q.y/2)*w+q.x/2]);
+}
+vec4 pixels(ivec2 q){return vec4(coarsePixel(0,q),coarsePixel(1,q),coarsePixel(2,q),coarsePixel(3,q));}
+void refinedFlow(ivec2 q,out vec4 v,out float m){
+ ivec2 size=ivec2(p.w,p.h)/2;
+ vec2 pos=clamp((vec2(q)+.5)/float(2)-.5,vec2(0),vec2(size-1));
+ ivec2 lo=ivec2(floor(pos)),hi=min(lo+1,size-1);vec2 f=fract(pos);
+ v=mix(mix(pixels(lo),pixels(ivec2(hi.x,lo.y)),f.x),mix(pixels(ivec2(lo.x,hi.y)),pixels(hi),f.x),f.y)*float(2);
+ m=mix(mix(coarsePixel(4,lo),coarsePixel(4,ivec2(hi.x,lo.y)),f.x),mix(coarsePixel(4,ivec2(lo.x,hi.y)),coarsePixel(4,hi),f.x),f.y);
+ int i=q.y*p.w+q.x,n=p.w*p.h;
+ v+=vec4(previous[i],previous[n+i],previous[2*n+i],previous[3*n+i]);
+}
+vec3 framePixel(int image,vec2 pos){
+ vec2 uv=(clamp(pos,vec2(0),vec2(p.w-1,p.h-1))+.5)/vec2(p.w,p.h);
+ return image==0?textureLod(A,uv,0).rgb:textureLod(B,uv,0).rgb;
+}
+vec4 feature(int image,vec2 pos){
+ vec2 uv=(clamp(pos,vec2(0),vec2(p.w-1,p.h-1))+.5)/vec2(p.w,p.h);
+ return image==2?textureLod(EA,uv,0):textureLod(EB,uv,0);
+}
+struct Values{vec4 a;vec4 b;vec4 ea;vec4 eb;vec4 f;float mask;};
+Values values(ivec2 q){
+ Values v;
+ refinedFlow(q,v.f,v.mask);
+ int i=q.y*p.w+q.x,n=p.w*p.h;
+ flow[i]=v.f.x;flow[n+i]=v.f.y;flow[2*n+i]=v.f.z;flow[3*n+i]=v.f.w;flow[4*n+i]=v.mask;
+ vec2 pos0=vec2(q)+v.f.xy,pos1=vec2(q)+v.f.zw;
+ v.a=vec4(framePixel(0,pos0),0);v.b=vec4(framePixel(1,pos1),0);
+ v.ea=feature(2,pos0);v.eb=feature(3,pos1);
+ return v;
+}
+void store4(int i,int group,f16vec4 v){result[i*5+group]=v;}
+void main(){
+ ivec2 q=ivec2(gl_GlobalInvocationID.xy);if(q.x>=p.w||q.y>=p.h)return;
+ Values r=values(q);int i=q.y*p.w+q.x;
+ store4(i,0,f16vec4(r.a.r,r.a.g,r.a.b,r.b.r));
+ store4(i,1,f16vec4(r.b.g,r.b.b,r.ea.r,r.ea.g));
+ store4(i,2,f16vec4(r.ea.b,r.ea.a,r.eb.r,r.eb.g));
+ store4(i,3,f16vec4(r.eb.b,r.eb.a,.5,r.mask));
+ store4(i,4,f16vec4(r.f.r,r.f.g,r.f.b,r.f.a));
+}

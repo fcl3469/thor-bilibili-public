@@ -1,0 +1,10 @@
+{
+  "version": "2.0.12.9",
+  "artifacts": [
+    {"name": "jlibtorrent-2.0.12.9.jar", "sha256": "c96316e640397249ecfbbe56c355afef472190b8d47d51a94a03e47eb60c219a"},
+    {"name": "jlibtorrent-android-arm64-2.0.12.9.jar", "sha256": "8e48600b74a9f497ce2c7e1e6a025ce550f039658baef986ad634298758d5b9d"},
+    {"name": "jlibtorrent-linux-x86_64-2.0.12.9.jar", "sha256": "588f70db3f2131f7c9a8133cba7883319c29a5434f2ad092ff4e1fb51dc2f088"}
+  ],
+  "release": "https://github.com/frostwire/frostwire-jlibtorrent/releases/tag/release/2.0.12.9",
+  "license": "MIT; bundled libtorrent, Boost and OpenSSL retain their own licenses"
+}

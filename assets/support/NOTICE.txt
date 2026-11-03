@@ -1,0 +1,2 @@
+Payment QR images supplied by the project maintainer for the optional support screen.
+Original images are preserved for accurate scanning and recipient verification.

@@ -1,0 +1,16 @@
+#version 450
+#if NCNN_fp16_storage
+#extension GL_EXT_shader_16bit_storage: require
+#endif
+layout(binding=0) readonly buffer Source { sfp rgb[]; };
+layout(binding=1) writeonly buffer Target { uint rgba[]; };
+layout(push_constant) uniform parameter { int stride; int plane; int width; int height; int left; int top; } p;
+void main() {
+ ivec2 q=ivec2(gl_GlobalInvocationID.xy);
+ if(q.x>=p.width || q.y>=p.height) return;
+ int i=(q.y+p.top)*p.stride+q.x+p.left;
+ vec3 c=vec3(buffer_ld1(rgb,i),buffer_ld1(rgb,p.plane+i),buffer_ld1(rgb,2*p.plane+i))/255.0;
+ // Avoid undefined float-to-integer conversion on an invalid network result.
+ if(any(isnan(c)) || any(isinf(c))) c=vec3(0.0);
+ rgba[q.y*p.width+q.x]=packUnorm4x8(vec4(clamp(c,0.0,1.0),1.0));
+}

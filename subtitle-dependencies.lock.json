@@ -1,0 +1,55 @@
+{
+  "translation_dependencies": [],
+  "asr": {
+    "kind": "reazon_cpu",
+    "name": "ReazonSpeech k2 v2 INT8 with Silero VAD",
+    "source_language": "ja",
+    "file_sizes": {
+      "encoder.onnx": 154670139,
+      "decoder.onnx": 2959337,
+      "joiner.onnx": 2696970,
+      "tokens.txt": 45754,
+      "silero_vad.onnx": 643854
+    },
+    "files": {
+      "encoder.onnx": "2c7bd08a8a99f9ddd0d9e458456577b1f6279214e51426f114f9eced44c54e1d",
+      "decoder.onnx": "8f0bff94d38797b03b762634ed03211a8e303d06cc4603cdd0cf4199d6eb1485",
+      "joiner.onnx": "49cc7ea1d3d35a40a27442db5e89996da64bf0e683a903dce76e99e57a12e4de",
+      "tokens.txt": "2c3ac659818a48a0c04010e0593bbc4d7c8a24a054340b01131499c05fd52def",
+      "silero_vad.onnx": "9e2449e1087496d8d4caba907f23e0bd3f78d91fa552479bb9c23ac09cbb1fd6"
+    },
+    "file_urls": {
+      "encoder.onnx": "https://huggingface.co/reazon-research/reazonspeech-k2-v2/resolve/291488c8151be24d7da4bf7af26e533fad96e407/encoder-epoch-99-avg-1.int8.onnx",
+      "decoder.onnx": "https://huggingface.co/reazon-research/reazonspeech-k2-v2/resolve/291488c8151be24d7da4bf7af26e533fad96e407/decoder-epoch-99-avg-1.int8.onnx",
+      "joiner.onnx": "https://huggingface.co/reazon-research/reazonspeech-k2-v2/resolve/291488c8151be24d7da4bf7af26e533fad96e407/joiner-epoch-99-avg-1.int8.onnx",
+      "tokens.txt": "https://huggingface.co/reazon-research/reazonspeech-k2-v2/resolve/291488c8151be24d7da4bf7af26e533fad96e407/tokens.txt",
+      "silero_vad.onnx": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/silero_vad.onnx"
+    },
+    "file_mirrors": {
+      "encoder.onnx": ["https://hf-cdn.sufy.com/reazon-research/reazonspeech-k2-v2/resolve/291488c8151be24d7da4bf7af26e533fad96e407/encoder-epoch-99-avg-1.int8.onnx"],
+      "decoder.onnx": ["https://hf-cdn.sufy.com/reazon-research/reazonspeech-k2-v2/resolve/291488c8151be24d7da4bf7af26e533fad96e407/decoder-epoch-99-avg-1.int8.onnx"],
+      "joiner.onnx": ["https://hf-cdn.sufy.com/reazon-research/reazonspeech-k2-v2/resolve/291488c8151be24d7da4bf7af26e533fad96e407/joiner-epoch-99-avg-1.int8.onnx"],
+      "tokens.txt": ["https://hf-cdn.sufy.com/reazon-research/reazonspeech-k2-v2/resolve/291488c8151be24d7da4bf7af26e533fad96e407/tokens.txt"]
+    },
+    "license": "Apache-2.0",
+    "vad_license": "MIT"
+  },
+  "direct_translation": {
+    "name": "Tencent Hy-MT2-1.8B Q4_K_M",
+    "source_language": "ja",
+    "target_language": "zh",
+    "pivot_language": null,
+    "file": "Hy-MT2-1.8B-Q4_K_M.gguf",
+    "size_bytes": 1133080448,
+    "sha256": "dc5f44fcf1fa496ee7ad725982c0c8c553a4de00259b53af84c4b89fb0c06699",
+    "url": "https://modelscope.cn/models/Tencent-Hunyuan/Hy-MT2-1.8B-GGUF/resolve/master/Hy-MT2-1.8B-Q4_K_M.gguf",
+    "upstream_url": "https://huggingface.co/tencent/Hy-MT2-1.8B-GGUF/resolve/a0c709d9fac510f2c807aa3af52872340dc37a4a/Hy-MT2-1.8B-Q4_K_M.gguf",
+    "license": "Apache-2.0",
+    "runtime": {
+      "archive": "llama.cpp-b8500.tar.gz",
+      "directory": "llama.cpp-b8500",
+      "url": "https://codeload.github.com/ggml-org/llama.cpp/tar.gz/refs/tags/b8500",
+      "sha256": "1ee7d187ede94452fcbb71ee5856e923212b84ed5f2ddfa5ec487a1079b23cb3"
+    }
+  }
+}

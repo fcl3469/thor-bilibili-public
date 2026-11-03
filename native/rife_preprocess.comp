@@ -1,0 +1,25 @@
+#version 450
+#if NCNN_fp16_storage
+#extension GL_EXT_shader_16bit_storage: require
+#endif
+layout(binding=0) readonly buffer Source { uint rgba[]; };
+layout(binding=1) writeonly buffer Target { sfp normalized[]; };
+layout(binding=2) writeonly buffer Time { sfp timestep[]; };
+layout(push_constant) uniform parameter {
+ int sourceWidth; int sourcePlane; int left; int top;
+ int width; int height; int paddedWidth; int paddedHeight; int targetPlane;
+ int targetWidth; int targetHeight; int writeTime;
+} p;
+float sampleChannel(ivec2 q,int channel) {
+ return unpackUnorm4x8(rgba[(p.top+q.y)*p.sourceWidth+p.left+q.x])[channel];
+}
+void main() {
+ ivec3 q=ivec3(gl_GlobalInvocationID);
+ if(q.x>=p.paddedWidth || q.y>=p.paddedHeight || q.z>=3) return;
+ vec2 src=clamp((vec2(min(q.x,p.targetWidth-1),min(q.y,p.targetHeight-1))+0.5)*vec2(p.width,p.height)/vec2(p.targetWidth,p.targetHeight)-0.5,vec2(0),vec2(p.width-1,p.height-1));
+ ivec2 a=ivec2(floor(src)),b=min(a+1,ivec2(p.width-1,p.height-1));vec2 f=fract(src);
+ float value=mix(mix(sampleChannel(a,q.z),sampleChannel(ivec2(b.x,a.y),q.z),f.x),mix(sampleChannel(ivec2(a.x,b.y),q.z),sampleChannel(b,q.z),f.x),f.y);
+ int pixel=q.y*p.paddedWidth+q.x;
+ buffer_st1(normalized,q.z*p.targetPlane+pixel,value);
+ if(p.writeTime!=0&&q.z==0) buffer_st1(timestep,pixel,0.5);
+}

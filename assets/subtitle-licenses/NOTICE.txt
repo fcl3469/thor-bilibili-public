@@ -1,0 +1,22 @@
+Local Japanese to Chinese subtitle translation uses Tencent Hy-MT2-1.8B Q4_K_M (Apache-2.0).
+Upstream: https://huggingface.co/tencent/Hy-MT2-1.8B-GGUF
+Pinned model revision: a0c709d9fac510f2c807aa3af52872340dc37a4a
+Model SHA256: dc5f44fcf1fa496ee7ad725982c0c8c553a4de00259b53af84c4b89fb0c06699
+Runtime: llama.cpp b8500 (MIT), https://github.com/ggml-org/llama.cpp/tree/b8500
+Thor adds an Android JNI wrapper, a Japanese-to-Chinese prompt, bounded subtitle scheduling, and exact-input/prompt-prefix caches. No model weights were modified. Full licenses accompany this notice.
+
+Japanese speech recognition uses ReazonSpeech k2 v2, Apache-2.0.
+Upstream: https://github.com/reazon-research/ReazonSpeech
+Model: https://huggingface.co/reazon-research/reazonspeech-k2-v2
+Pinned model revision: 291488c8151be24d7da4bf7af26e533fad96e407
+Thor downloads upstream INT8 encoder, decoder and joiner, plus tokens.txt, unchanged, on explicit user request. Model weights are not part of the APK.
+See ReazonSpeech-LICENSE.txt; exact file hashes are in subtitles/manifest.json.
+
+Speech activity detection uses Silero VAD, MIT.
+Upstream: https://github.com/snakers4/silero-vad
+ONNX distribution: https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/silero_vad.onnx
+Model SHA256: 9e2449e1087496d8d4caba907f23e0bd3f78d91fa552479bb9c23ac09cbb1fd6
+See Silero-VAD-LICENSE.txt. Thor applies bounded normalization to analysis PCM only.
+
+Models are downloaded over HTTPS and checked against pinned file sizes and SHA256 before use.
+ReazonSpeech uses the public hf-cdn.sufy.com download mirror with upstream Hugging Face as fallback; both must match the same pinned revision, size and SHA256. Hy-MT2 uses the model author's ModelScope and Hugging Face repositories.

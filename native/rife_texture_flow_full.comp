@@ -1,0 +1,15 @@
+#version 450
+#extension GL_EXT_shader_16bit_storage: require
+layout(binding=0) readonly buffer Coarse {float16_t coarse[];};
+layout(binding=1) readonly buffer Previous {float previous[];};
+layout(binding=2,rgba32f) uniform writeonly image2D flowMap;
+layout(binding=3,r32f) uniform writeonly image2D weightMap;
+layout(push_constant) uniform parameter {int w;int h;int scale;int stage;int nhwc;} p;
+float pixel(int c,ivec2 q){return float(coarse[((q.y/2)*(p.w/2)+q.x/2)*24+c*4+(q.y%2)*2+q.x%2]);}
+void main(){
+ ivec2 q=ivec2(gl_GlobalInvocationID.xy);if(q.x>=p.w||q.y>=p.h)return;
+ int i=q.y*p.w+q.x,n=p.w*p.h;
+ vec4 flow=vec4(pixel(0,q),pixel(1,q),pixel(2,q),pixel(3,q))+vec4(previous[i],previous[n+i],previous[2*n+i],previous[3*n+i]);
+ imageStore(flowMap,q,flow);
+ imageStore(weightMap,q,vec4(1.0/(1.0+exp(-clamp(pixel(4,q),-20.0,20.0)))));
+}

@@ -1,0 +1,87 @@
+#version 450
+// Stage 2: reconstruct each of the four source pixels once while preparing x2.
+// Each invocation owns one 2x2 block; no flow writes overlap. FP32 flow retained.
+#extension GL_EXT_shader_16bit_storage: require
+layout(binding=0) readonly buffer A { float16_t a[]; };
+layout(binding=1) readonly buffer B { float16_t b[]; };
+layout(binding=2) readonly buffer EA { float16_t ea[]; };
+layout(binding=3) readonly buffer EB { float16_t eb[]; };
+layout(binding=4) writeonly buffer Flow { float flow[]; };
+layout(binding=6) readonly buffer Coarse { float16_t coarse[]; };
+layout(binding=7) readonly buffer Previous { float16_t previous[]; };
+layout(binding=5) writeonly buffer X { float16_t result[]; };
+layout(push_constant) uniform parameter { int w; int h; int scale; int stage; int nhwc; } p;
+float flowPixel(int c,ivec2 q) {
+ int w=p.w/4/2,h=p.h/4/2;
+ int channel=c*4+(q.y%2)*2+q.x%2;
+ return float(coarse[p.nhwc!=0?((q.y/2)*w+q.x/2)*24+channel:channel*w*h+(q.y/2)*w+q.x/2]);
+}
+vec4 pixels(ivec2 q){return vec4(flowPixel(0,q),flowPixel(1,q),flowPixel(2,q),flowPixel(3,q));}
+
+float coarse0(int c,ivec2 q){int channel=c*4+(q.y%2)*2+q.x%2;return float(previous[((q.y/2)*(p.w/16)+q.x/2)*24+channel]);}
+vec4 vector0(ivec2 q){return vec4(coarse0(0,q),coarse0(1,q),coarse0(2,q),coarse0(3,q));}
+void previousFlow(ivec2 q,out vec4 f,out float m){
+ ivec2 size=ivec2(p.w,p.h)/8;vec2 pos=clamp((vec2(q)+.5)/8.0-.5,vec2(0),vec2(size-1));ivec2 lo=ivec2(floor(pos)),hi=min(lo+1,size-1);vec2 t=fract(pos);
+ f=mix(mix(vector0(lo),vector0(ivec2(hi.x,lo.y)),t.x),mix(vector0(ivec2(lo.x,hi.y)),vector0(hi),t.x),t.y)*8.0;
+ m=mix(mix(coarse0(4,lo),coarse0(4,ivec2(hi.x,lo.y)),t.x),mix(coarse0(4,ivec2(lo.x,hi.y)),coarse0(4,hi),t.x),t.y);
+}
+
+void reconstruct(ivec2 q,out vec4 v,out float m){
+ ivec2 size=ivec2(p.w,p.h)/4;
+ vec2 pos=clamp((vec2(q)+.5)/float(4)-.5,vec2(0),vec2(size-1));
+ ivec2 lo=ivec2(floor(pos)),hi=min(lo+1,size-1);vec2 f=fract(pos);
+ v=mix(mix(pixels(lo),pixels(ivec2(hi.x,lo.y)),f.x),mix(pixels(ivec2(lo.x,hi.y)),pixels(hi),f.x),f.y)*float(4);
+ m=mix(mix(flowPixel(4,lo),flowPixel(4,ivec2(hi.x,lo.y)),f.x),mix(flowPixel(4,ivec2(lo.x,hi.y)),flowPixel(4,hi),f.x),f.y);
+ int i=q.y*p.w+q.x,n=p.w*p.h;
+ vec4 pf;float pm;previousFlow(q,pf,pm);v+=pf;
+ flow[i]=v.x;flow[n+i]=v.y;flow[2*n+i]=v.z;flow[3*n+i]=v.w;flow[4*n+i]=m;
+}
+
+vec4 pixel(int image,ivec2 q){
+ int n=p.w*p.h,i=q.y*p.w+q.x;
+ if(p.nhwc!=0){
+  if(image==0)return vec4(a[i*3],a[i*3+1],a[i*3+2],0);
+  if(image==1)return vec4(b[i*3],b[i*3+1],b[i*3+2],0);
+  if(image==2)return vec4(ea[i*4],ea[i*4+1],ea[i*4+2],ea[i*4+3]);
+  return vec4(eb[i*4],eb[i*4+1],eb[i*4+2],eb[i*4+3]);
+ }
+ if(image==0)return vec4(a[i],a[n+i],a[n*2+i],0);
+ if(image==1)return vec4(b[i],b[n+i],b[n*2+i],0);
+ if(image==2)return vec4(ea[i],ea[n+i],ea[n*2+i],ea[n*3+i]);
+ return vec4(eb[i],eb[n+i],eb[n*2+i],eb[n*3+i]);
+}
+vec4 sampleImage(int image,vec2 pos){
+ pos=clamp(pos,vec2(0),vec2(p.w-1,p.h-1));ivec2 lo=ivec2(floor(pos)),hi=min(lo+1,ivec2(p.w-1,p.h-1));vec2 f=fract(pos);
+ return mix(mix(pixel(image,lo),pixel(image,ivec2(hi.x,lo.y)),f.x),mix(pixel(image,ivec2(lo.x,hi.y)),pixel(image,hi),f.x),f.y);
+}
+struct Values{vec4 a;vec4 b;vec4 ea;vec4 eb;vec4 f;float mask;};
+Values values(ivec2 q){
+ Values v;
+ if(p.stage==0){v.a=pixel(0,q);v.b=pixel(1,q);v.ea=pixel(2,q);v.eb=pixel(3,q);v.f=vec4(0);v.mask=0;return v;}
+ int n=p.w*p.h,i=q.y*p.w+q.x;
+ reconstruct(q,v.f,v.mask);
+ vec2 pos0=vec2(q)+v.f.xy,pos1=vec2(q)+v.f.zw;
+ v.a=sampleImage(0,pos0);v.b=sampleImage(1,pos1);v.ea=sampleImage(2,pos0);v.eb=sampleImage(3,pos1);
+ return v;
+}
+void store(int pixelIndex,int channel,float v){int w=p.w/p.scale,h=p.h/p.scale,c=p.stage==0?15:20;result[p.nhwc!=0?pixelIndex*c+channel:channel*w*h+pixelIndex]=float16_t(v);}
+void main(){
+ ivec2 q=ivec2(gl_GlobalInvocationID.xy);int w=p.w/p.scale,h=p.h/p.scale;if(q.x>=w||q.y>=h)return;
+ vec2 src=clamp((vec2(q)+.5)*float(p.scale)-.5,vec2(0),vec2(p.w-1,p.h-1));
+ ivec2 lo=ivec2(floor(src)),hi=min(lo+1,ivec2(p.w-1,p.h-1));vec2 f=fract(src);
+ Values r=values(lo);
+ if(p.scale!=1){
+  Values s=values(ivec2(hi.x,lo.y)),t=values(ivec2(lo.x,hi.y)),u=values(hi);
+  r.a=mix(mix(r.a,s.a,f.x),mix(t.a,u.a,f.x),f.y);
+  r.b=mix(mix(r.b,s.b,f.x),mix(t.b,u.b,f.x),f.y);
+  r.ea=mix(mix(r.ea,s.ea,f.x),mix(t.ea,u.ea,f.x),f.y);
+  r.eb=mix(mix(r.eb,s.eb,f.x),mix(t.eb,u.eb,f.x),f.y);
+  r.f=mix(mix(r.f,s.f,f.x),mix(t.f,u.f,f.x),f.y);
+  r.mask=mix(mix(r.mask,s.mask,f.x),mix(t.mask,u.mask,f.x),f.y);
+ }
+ int i=q.y*w+q.x;
+ for(int c=0;c<3;c++){store(i,c,r.a[c]);store(i,3+c,r.b[c]);}
+ for(int c=0;c<4;c++){store(i,6+c,r.ea[c]);store(i,10+c,r.eb[c]);}
+ store(i,14,.5);
+ if(p.stage>0){store(i,15,r.mask);for(int c=0;c<4;c++)store(i,16+c,r.f[c]/float(p.scale));}
+}

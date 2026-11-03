@@ -1,0 +1,13 @@
+#version 450
+layout(binding=0) uniform sampler2D decoded;
+layout(binding=1,rgba8) uniform writeonly image2D frame;
+layout(push_constant) uniform parameter {int stride;int rows;int left;int top;int width;int height;int w;int h;int linear;} p;
+vec3 at(vec2 xy){return textureLod(decoded,(xy+vec2(p.left,p.top)+.5)/vec2(p.stride,p.rows),0).rgb;}
+void main(){
+ ivec2 q=ivec2(gl_GlobalInvocationID.xy);if(q.x>=p.w||q.y>=p.h)return;
+ vec2 src=clamp((vec2(q)+.5)*vec2(p.width,p.height)/vec2(p.w,p.h)-.5,vec2(0),vec2(p.width-1,p.height-1));
+ vec3 value;
+ if(p.linear!=0||(p.w==p.width&&p.h==p.height))value=at(src);
+ else{vec2 a=floor(src),b=min(a+1,vec2(p.width-1,p.height-1)),f=fract(src);value=mix(mix(at(a),at(vec2(b.x,a.y)),f.x),mix(at(vec2(a.x,b.y)),at(b),f.x),f.y);}
+ imageStore(frame,q,vec4(value,1));
+}

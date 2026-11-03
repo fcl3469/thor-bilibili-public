@@ -1,0 +1,13 @@
+Unmodified upstream license texts accompanying jlibtorrent 2.0.12.9:
+
+jlibtorrent-MIT.txt
+https://raw.githubusercontent.com/frostwire/frostwire-jlibtorrent/release/2.0.12.9/LICENSE.md
+
+libtorrent-BSD.txt
+https://raw.githubusercontent.com/arvidn/libtorrent/v2.0.12/COPYING
+
+Boost-LICENSE_1_0.txt
+https://www.boost.org/LICENSE_1_0.txt
+
+OpenSSL-1.1.1-LICENSE.txt
+https://raw.githubusercontent.com/openssl/openssl/OpenSSL_1_1_1t/LICENSE

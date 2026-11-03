@@ -1,0 +1,19 @@
+{
+  "project": "iDvel/rime-ice",
+  "commit": "9e66b0729083b37d217312294f6d516c8d7234be",
+  "source": "https://github.com/iDvel/rime-ice",
+  "license": "GPL-3.0; upstream source attribution retained in each dictionary",
+  "generated_on": "2026-09-23",
+  "entries": 899828,
+  "pinyin_keys": 787417,
+  "bytes": 24518417,
+  "files": {
+    "assets/rime-phrases.dict.yaml": "e341598343a0f0f2035bb1aafc34a7f3bb7887deeecb3f60796262aaa2983e6b",
+    "dictionary-sources/rime-ice-base.dict.yaml": "19f6f96f5dfe553545f36c979001a12e3f3c0316f4e23f4382960a13e93e7550",
+    "dictionary-sources/rime-ice-ext.dict.yaml": "f3843fecd2ec69ab823360383e8a07b4a69f4189133a87186f1702b350c1db2e",
+    "dictionary-sources/thor-extra.tsv": "58ea1790195036672da19ee59096f67a0aea7a29158eb5ae0b0832308de8ebe8",
+    "assets/phrases.bin": "27806768febc81a86cb287cbff5a8c409f44f3ffce9c810e0242b4f208d4fe3c",
+    "assets/rime-ice-LICENSE.txt": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+  },
+  "modifications": "Merged by exact pinyin/word, deduplicated, sorted by frequency; added thor-extra.tsv; compact sorted-key index. No online word harvesting."
+}

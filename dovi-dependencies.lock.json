@@ -1,0 +1,24 @@
+{
+  "archive": "libmpv-dovi-0.41.0.aar",
+  "repository": "https://github.com/GCHOfficial/libmpv-android",
+  "source_commit": "3c2f33cd7d09c75dbc340f86b2d34c55e94b7f99",
+  "artifact_repository_commit": "f1a5e009f37e2566e3e2f4437ef07d9fc2f811e0",
+  "url": "https://media.githubusercontent.com/media/GCHOfficial/iptvs/f1a5e009f37e2566e3e2f4437ef07d9fc2f811e0/android/app/libs/libmpv-dovi.aar",
+  "sha256": "e8ad90ca2d23d68918b1062e0acd15182d16aaca7e63519526aa68bfee2ed99e",
+  "mpv": "0.41.0",
+  "ffmpeg": "8.1",
+  "libplacebo": "7.360.1",
+  "libdovi": "3.3.2",
+  "license": "GPL-3.0-or-later (native bundle); local development distribution only",
+  "arm64": {
+    "libavcodec.so": "2048ef964b3f7de520b0515db645923d9548fcd656b3d7b0732bbe5822ccb3a3",
+    "libavdevice.so": "20f8d19d422b43e0a91b1dbe8f7b46558277aaab08e2971cc2a19238d2fc9a3d",
+    "libavfilter.so": "1234199006dd10f73b92e7f7b10213530cf314dd3dd5bcdcf5f8527d4c27073a",
+    "libavformat.so": "4edf68d3a0008840e516992380466ff7ee2ec926a56aff07713fdea4025492a7",
+    "libavutil.so": "26a08d67f466edd3917280de7938fe373503ae94f59a86e377ce61de3ebb249b",
+    "libc++_shared.so": "c4c2fe5cbcb1fba0003a31fc7ab29a9bb12df6cc187ec45a806462540e83d93b",
+    "libmpv.so": "e292344a125a1327a05c04f98f151f6e72341a9339fe54ea2ca817f07ed6ba63",
+    "libswresample.so": "a18b0a5a556f74ba2fa61ee60cecccfcbd6b746f9cb0088b05534f3feb17678d",
+    "libswscale.so": "6707ce92803d331ce811cb65f752bb7441ba4396dbc71ecd284792fe7ec9ffe6"
+  }
+}

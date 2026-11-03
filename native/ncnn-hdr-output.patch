@@ -1,0 +1,25 @@
+--- a/src/gpu.cpp
++++ b/src/gpu.cpp
+@@ -2801,10 +2801,13 @@
+ #if __ANDROID_API__ >= 26
+     support_VK_KHR_android_surface = 0;
+ #endif // __ANDROID_API__ >= 26
++    bool hdr_colorspace = false;
+     for (uint32_t j = 0; j < instanceExtensionPropertyCount; j++)
+     {
+         const VkExtensionProperties& exp = instanceExtensionProperties[j];
+         //         NCNN_LOGE("instance extension %s = %u", exp.extensionName, exp.specVersion);
++        if (strcmp(exp.extensionName, "VK_EXT_swapchain_colorspace") == 0)
++            hdr_colorspace = true;
+ 
+         if (strcmp(exp.extensionName, "VK_KHR_external_memory_capabilities") == 0)
+             support_VK_KHR_external_memory_capabilities = exp.specVersion;
+@@ -2873,6 +2876,8 @@
+         enabledExtensions.push_back("VK_KHR_portability_enumeration");
+     if (support_VK_KHR_surface)
+         enabledExtensions.push_back("VK_KHR_surface");
++    if (hdr_colorspace && support_VK_KHR_surface)
++        enabledExtensions.push_back("VK_EXT_swapchain_colorspace");
+ #if ENABLE_VALIDATION_LAYER
+     if (support_VK_EXT_debug_utils)
+         enabledExtensions.push_back("VK_EXT_debug_utils");

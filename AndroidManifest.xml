@@ -1,0 +1,35 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="local.thor.bilichannels" android:versionCode="100" android:versionName="0.6.0-public-preview">
+ <uses-sdk android:minSdkVersion="30" android:targetSdkVersion="34"/>
+ <uses-permission android:name="android.permission.INTERNET"/>
+ <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+ <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+ <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+ <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+ <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+ <uses-permission android:name="android.permission.WAKE_LOCK"/>
+ <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+ <uses-permission android:name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION"/>
+ <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+ <uses-feature android:name="android.software.activities_on_secondary_displays" android:required="false"/>
+ <queries><package android:name="com.tencent.mm"/><package android:name="com.eg.android.AlipayGphone"/></queries>
+ <application android:label="Thor 频道" android:appCategory="video" android:icon="@drawable/icon" android:theme="@style/AppTheme" android:allowBackup="false" android:usesCleartextTraffic="false" android:supportsRtl="true">
+  <uses-native-library android:name="libcdsprpc.so" android:required="false" />
+  <provider android:name=".TorrentContentProvider" android:authorities="local.thor.bilichannels.torrent" android:exported="false" android:grantUriPermissions="false"/>
+  <service android:name=".CacheService" android:exported="false" android:foregroundServiceType="dataSync"/>
+  <service android:name=".TorrentDownloadService" android:exported="false" android:foregroundServiceType="dataSync"/>
+  <service android:name=".RemoteDeviceService" android:exported="false" android:foregroundServiceType="dataSync"/>
+  <service android:name=".ThorNetworkService" android:exported="false" android:process=":thor_link"/>
+  <service android:name=".SubtitleService" android:exported="false" android:process=":subtitles" android:stopWithTask="true"/>
+  <service android:name=".SubtitleModelDownloadService" android:exported="false" android:foregroundServiceType="dataSync"/>
+  <activity android:name=".DonationActivity" android:exported="false" android:label="支持开发"/>
+  <activity android:name=".SubtitleModelActivity" android:exported="false" android:label="字幕模型" android:configChanges="orientation|screenSize"/>
+  <receiver android:name=".RemoteInstallReceiver" android:exported="false"><intent-filter><action android:name="android.intent.action.MY_PACKAGE_REPLACED"/></intent-filter></receiver>
+  <activity android:name=".RemoteDebugActivity" android:label="与 Codex 对话" android:exported="false" android:launchMode="singleTop" android:theme="@android:style/Theme.Material.Light.NoActionBar" android:windowSoftInputMode="adjustResize"/>
+  <activity android:name=".RemotePlaybackProbeActivity" android:label="静音插帧自测" android:exported="false" android:theme="@android:style/Theme.Material.Light.NoActionBar"/>
+  <activity android:name=".OfficialLoginActivity" android:exported="false" android:configChanges="orientation|screenSize"/>
+  <activity android:name=".XunleiCloudActivity" android:exported="false" android:label="迅雷云盘" android:theme="@android:style/Theme.Material.Light.NoActionBar" android:configChanges="orientation|screenSize" android:windowSoftInputMode="adjustResize"/>
+  <activity android:name=".MainActivity" android:exported="true" android:resizeableActivity="true" android:launchMode="singleTask" android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|density|keyboardHidden|keyboard|navigation|uiMode" android:enableOnBackInvokedCallback="false">
+   <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
+  </activity>
+ </application>
+</manifest>

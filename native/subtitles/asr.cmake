@@ -1,0 +1,5 @@
+add_library(thor_subtitle_asr SHARED "${THOR_SUBTITLE_SOURCE}/asr_jni.cpp")
+target_include_directories(thor_subtitle_asr PRIVATE "${PROJECT_SOURCE_DIR}")
+target_compile_features(thor_subtitle_asr PRIVATE cxx_std_17)
+target_link_options(thor_subtitle_asr PRIVATE -Wl,-z,max-page-size=16384)
+target_link_libraries(thor_subtitle_asr PRIVATE sherpa-onnx-core)
